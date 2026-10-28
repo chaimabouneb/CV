@@ -1,0 +1,3 @@
+hsv :
+bgr in opencv to hsv , detecting color we work with hsv , hue is color going through the colors of the circle,define an interval for the color in hue channel ,
+Color-Based Segmentation, more specifically HSV Thresholding (also called Color Thresholding).
