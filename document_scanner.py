@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 
-# Camera settings
+
 framewidth = 640
 frameheight = 480
 
@@ -12,7 +12,7 @@ cap.set(4, frameheight)
 cap.set(10, 150)
 
 
-# PREPROCESSING
+
 def preProcessing(img):
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -29,7 +29,7 @@ def preProcessing(img):
     return imgErod
 
 
-# REORDER THE FOUR CORNER POINTS
+
 def reorder(myPoints):
     myPoints = myPoints.reshape((4, 2))
 
@@ -38,15 +38,15 @@ def reorder(myPoints):
     add = myPoints.sum(axis=1)
     diff = np.diff(myPoints, axis=1)
 
-    newPoints[0] = myPoints[np.argmin(add)]   # Top-left
-    newPoints[1] = myPoints[np.argmin(diff)]  # Top-right
-    newPoints[2] = myPoints[np.argmax(diff)]  # Bottom-left
-    newPoints[3] = myPoints[np.argmax(add)]   # Bottom-right
+    newPoints[0] = myPoints[np.argmin(add)]  
+    newPoints[1] = myPoints[np.argmin(diff)]  
+    newPoints[2] = myPoints[np.argmax(diff)]  
+    newPoints[3] = myPoints[np.argmax(add)]   
 
     return newPoints
 
 
-# CONTOUR DETECTION
+
 def getContours(img):
     biggest = np.array([])
     maxarea = 0
@@ -89,7 +89,7 @@ def getContours(img):
     return biggest
 
 
-# PERSPECTIVE TRANSFORMATION
+
 def getWarp(img, biggest):
 
     pts1 = reorder(biggest)
@@ -115,7 +115,7 @@ def getWarp(img, biggest):
     return imgOutput
 
 
-# MAIN LOOP
+
 while True:
 
     success, img = cap.read()
@@ -129,13 +129,13 @@ while True:
     # Copy original image for drawing contours
     imgContour = img.copy()
 
-    # Preprocessing
+
     imgthresh = preProcessing(img)
 
     # Find largest quadrilateral
     biggest = getContours(imgthresh)
 
-    # Perspective transformation only if 4 points are detected
+  
     if biggest.size != 0:
 
         warpedimg = getWarp(img, biggest)
@@ -145,16 +145,16 @@ while True:
     else:
         cv2.imshow("result", img)
 
-    # Display original and processed images
+
     cv2.imshow("Original", img)
     cv2.imshow("Preprocessed", imgthresh)
     cv2.imshow("Contours", imgContour)
 
-    # Press Q to quit
+ 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 
-# RELEASE CAMERA AND CLOSE WINDOWS
+
 cap.release()
 cv2.destroyAllWindows()
